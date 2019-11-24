@@ -1,0 +1,5 @@
+.idea
+.gradle
+build
+*application.yaml
+*key.der
