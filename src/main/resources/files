@@ -1,0 +1,5 @@
+Files to add in this directory:
+application.yaml
+private_key.der
+public_key.der
+lilyanov.p12

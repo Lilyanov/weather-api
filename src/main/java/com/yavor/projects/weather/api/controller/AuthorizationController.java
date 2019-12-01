@@ -1,6 +1,5 @@
 package com.yavor.projects.weather.api.controller;
 
-import com.yavor.projects.weather.api.dto.TokenDto;
 import com.yavor.projects.weather.api.entity.User;
 import com.yavor.projects.weather.api.security.UnauthorizedExcpetion;
 import com.yavor.projects.weather.api.service.AuthorizationService;
@@ -24,10 +23,10 @@ public class AuthorizationController {
         this.authorizationService = authorizationService;
     }
 
-    @PostMapping(value="/generate")
-    public ResponseEntity<TokenDto> generateJWT(@RequestBody User user) throws UnauthorizedExcpetion {
-        var token = authorizationService.generateJWT(user);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+    @PostMapping(value="/get-token")
+    public ResponseEntity<User> generateJWT(@RequestBody User user) throws UnauthorizedExcpetion {
+        var existingUser = authorizationService.generateJWT(user);
+        return new ResponseEntity<>(existingUser, HttpStatus.OK);
     }
 
     @ExceptionHandler(value = {UnauthorizedExcpetion.class})

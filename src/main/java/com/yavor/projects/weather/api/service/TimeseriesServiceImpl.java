@@ -17,8 +17,8 @@ public class TimeseriesServiceImpl implements TimeseriesService {
     }
 
     @Override
-    public List<Timeseries> findAll() {
-        return timeseriesRepository.findAll();
+    public List<Timeseries> findTimeseriesByTypeForPeriod(String type, Date from, Date to) {
+        return timeseriesRepository.findTimeseriesByTypeForPeriod(type, from, to);
     }
 
     @Override

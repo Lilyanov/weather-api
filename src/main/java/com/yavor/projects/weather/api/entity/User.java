@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +22,10 @@ public class User {
 
     @Column(name = "last_name")
     private String lastName;
+
+   // @JsonInclude()
+    @Transient
+    private String token;
 
 
     public User() {
@@ -57,6 +62,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

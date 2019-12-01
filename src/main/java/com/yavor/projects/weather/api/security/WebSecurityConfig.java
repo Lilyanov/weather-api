@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
-        web.ignoring().antMatchers("/auth/generate", "/mocky");
+        web.ignoring().antMatchers("/auth/get-token");
     }
 
 }

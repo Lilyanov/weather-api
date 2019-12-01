@@ -3,7 +3,6 @@ package com.yavor.projects.weather.api.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.yavor.projects.weather.api.dto.TokenDto;
 import com.yavor.projects.weather.api.entity.User;
 import com.yavor.projects.weather.api.repository.UserRepository;
 import com.yavor.projects.weather.api.security.UnauthorizedExcpetion;
@@ -44,7 +43,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public TokenDto generateJWT(User user) throws UnauthorizedExcpetion {
+    public User generateJWT(User user) throws UnauthorizedExcpetion {
         if (user.getUsername() == null || user.getUsername().isEmpty()
                 || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new UnauthorizedExcpetion("Username and password are required !");
@@ -53,7 +52,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (optionalUser.isEmpty()) {
             throw new UnauthorizedExcpetion(String.format("User with username %s doesn't exist !", user.getUsername()));
         }
-        if (!optionalUser.get().getPassword().equals(user.getPassword())) {
+        var existingUser = optionalUser.get();
+        if (!existingUser.getPassword().equals(user.getPassword())) {
             throw new UnauthorizedExcpetion("Incorrect username or password !");
         }
         Calendar cal = Calendar.getInstance();
@@ -63,10 +63,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 .withIssuer("weather.api.bg")
                 .withIssuedAt(new Date())
                 .withExpiresAt(cal.getTime())
-                .withClaim("username", optionalUser.get().getUsername())
+                .withClaim("username", existingUser.getUsername())
                 .sign(algorithm);
-
-        return new TokenDto(token);
+        existingUser.setToken(token);
+        return existingUser;
     }
 
     @Override
