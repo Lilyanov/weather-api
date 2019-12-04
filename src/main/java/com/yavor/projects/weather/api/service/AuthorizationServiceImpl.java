@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
 
-    private final  Algorithm algorithm;
+    private final Algorithm algorithm;
 
     private final JWTVerifier jwtVerifier;
 
@@ -66,6 +66,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 .withClaim("username", existingUser.getUsername())
                 .sign(algorithm);
         existingUser.setToken(token);
+        existingUser.setPassword("");
         return existingUser;
     }
 

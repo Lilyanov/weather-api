@@ -8,7 +8,7 @@ import javax.persistence.Transient;
 import java.util.Objects;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -23,7 +23,6 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-   // @JsonInclude()
     @Transient
     private String token;
 

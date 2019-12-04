@@ -23,7 +23,7 @@ public class AuthorizationController {
         this.authorizationService = authorizationService;
     }
 
-    @PostMapping(value="/get-token")
+    @PostMapping(value = "/get-token")
     public ResponseEntity<User> generateJWT(@RequestBody User user) throws UnauthorizedExcpetion {
         var existingUser = authorizationService.generateJWT(user);
         return new ResponseEntity<>(existingUser, HttpStatus.OK);

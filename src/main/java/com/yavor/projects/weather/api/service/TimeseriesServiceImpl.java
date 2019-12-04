@@ -27,7 +27,7 @@ public class TimeseriesServiceImpl implements TimeseriesService {
             throw new IllegalArgumentException("Timeseries are empty !");
         }
         var date = new Date();
-        for (var t: timeSeriesList) {
+        for (var t : timeSeriesList) {
             t.setInsertionTime(date);
             timeseriesRepository.save(t);
         }
