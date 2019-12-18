@@ -1,19 +1,38 @@
 package com.yavor.projects.weather.api.service;
 
+import com.yavor.projects.weather.api.dto.TimeseriesGroup;
 import com.yavor.projects.weather.api.entity.Timeseries;
 import com.yavor.projects.weather.api.repository.TimeseriesRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TimeseriesServiceImpl implements TimeseriesService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimeseriesServiceImpl.class);
 
     private final TimeseriesRepository timeseriesRepository;
 
     public TimeseriesServiceImpl(TimeseriesRepository timeseriesRepository) {
         this.timeseriesRepository = timeseriesRepository;
+    }
+
+    @Override
+    public List<TimeseriesGroup> findTimeseriesGroups(List<String> types, Date from, Date to) {
+        if (types == null || types.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return types.parallelStream()
+                .map(type -> {
+                    var timeseries = findTimeseriesByTypeForPeriod(type, from, to);
+                    return new TimeseriesGroup(type, timeseries);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

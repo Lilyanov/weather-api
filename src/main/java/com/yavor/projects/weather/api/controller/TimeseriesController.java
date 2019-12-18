@@ -1,5 +1,6 @@
 package com.yavor.projects.weather.api.controller;
 
+import com.yavor.projects.weather.api.dto.TimeseriesGroup;
 import com.yavor.projects.weather.api.entity.Timeseries;
 import com.yavor.projects.weather.api.service.TimeseriesService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,12 +27,12 @@ public class TimeseriesController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Timeseries>> findByTypeForPerid(
-            @RequestParam("type") String type,
+    public ResponseEntity<List<TimeseriesGroup>> findByTypeForPerid(
+            @RequestParam("types") List<String> types,
             @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date from,
             @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date to) {
 
-        var timeseries = timeseriesService.findTimeseriesByTypeForPeriod(type, from, to);
+        var timeseries = timeseriesService.findTimeseriesGroups(types, from, to);
         return new ResponseEntity<>(timeseries, HttpStatus.OK);
     }
 
