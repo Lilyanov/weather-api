@@ -4,3 +4,4 @@ build
 *application.yaml
 *key.der
 *.p12
+*-tcp*
