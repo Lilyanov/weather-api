@@ -5,5 +5,7 @@ import com.yavor.projects.weather.api.dto.DeviceStatus;
 
 public interface MqttService {
 
-    void publishLampControl(String deviceId, DeviceStatus status);
+    DeviceStatus publishLampControl(String deviceId, DeviceStatus status);
+
+    void subscribe(final String deviceId);
 }

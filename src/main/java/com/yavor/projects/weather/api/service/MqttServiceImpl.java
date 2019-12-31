@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class MqttServiceImpl implements MqttService {
@@ -20,42 +21,40 @@ public class MqttServiceImpl implements MqttService {
 
     private IMqttClient mqttClient;
     private ObjectMapper mapper;
-    private DeviceService deviceService;
 
-    public MqttServiceImpl(IMqttClient mqttClient, DeviceService deviceService) {
+    private LinkedBlockingQueue<DeviceStatus> receivedStatuses;
+
+    public MqttServiceImpl(IMqttClient mqttClient) {
         this.mqttClient = mqttClient;
-        this.deviceService = deviceService;
+        this.receivedStatuses = new LinkedBlockingQueue<>();
         this.mapper = new ObjectMapper();
     }
 
-    @PostConstruct
-    public void initializeSubscribtions() {
-        deviceService.findAllDevices().forEach(device -> subscribe(device.getDeviceId()));
-    }
-
     @Override
-    public void publishLampControl(String deviceId, DeviceStatus status) {
+    public DeviceStatus publishLampControl(String deviceId, DeviceStatus status) {
         try {
             var statusStr = mapper.writeValueAsString(status);
             LOGGER.info("Sending status: {} to device: {}", statusStr, deviceId);
-            publish(PUBLISH_LAMP_CONTROL_TOPIC.replace("{}", deviceId), statusStr);
+            return publish(PUBLISH_LAMP_CONTROL_TOPIC.replace("{}", deviceId), statusStr);
         } catch (JsonProcessingException e) {
             LOGGER.error("Sending status: {} to device: {} failed. Reason: {}",status, deviceId, e.getMessage());
         }
+        return null;
     }
 
-
-    private void publish(final String topic, final String payload) {
+    private DeviceStatus publish(final String topic, final String payload) {
         try {
             var mqttMessage = new MqttMessage();
             mqttMessage.setPayload(payload.getBytes());
             mqttClient.publish(topic, mqttMessage);
-        } catch (MqttException e) {
+            return receivedStatuses.poll(10, TimeUnit.SECONDS);
+        } catch (MqttException | InterruptedException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    private void subscribe(final String deviceId) {
+    public void subscribe(final String deviceId) {
         var deviceTopic = RECEIVE_LAMP_STATUS_TOPIC.replace("{}", deviceId);
         LOGGER.info("Subscribe to topic: {}", deviceTopic);
 
@@ -64,7 +63,8 @@ public class MqttServiceImpl implements MqttService {
                 LOGGER.info("Receive message on topic: {}", topic);
                 LOGGER.info("Message: {}", new String(msg.getPayload()));
                 var status = mapper.readValue(msg.getPayload(), DeviceStatus.class);
-                this.deviceService.switchDevice(deviceId, status);
+                status.setDeviceId(deviceId);
+                receivedStatuses.add(status);
             });
         } catch (MqttException e) {
             e.printStackTrace();

@@ -23,6 +23,9 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "role")
+    private String role;
+
     @Transient
     private String token;
 
@@ -69,6 +72,14 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

@@ -31,12 +31,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterAfter(new CorsFilter(), CsrfFilter.class);
         // No session will be created or used by spring security
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        // Entry points
-        http.authorizeRequests().anyRequest().authenticated();
-        //  http.authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated();
         // Apply JWT
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+        http
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/devices/**").hasAuthority("ROLE_WRITE_USER")
+                .anyRequest().authenticated().and()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
     }
 
     @Override
@@ -44,5 +45,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
         web.ignoring().antMatchers("/auth/get-token");
     }
-
 }

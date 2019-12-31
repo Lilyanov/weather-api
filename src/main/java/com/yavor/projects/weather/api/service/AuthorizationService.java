@@ -7,5 +7,5 @@ public interface AuthorizationService {
 
     User generateJWT(User user) throws UnauthorizedExcpetion;
 
-    String verifyAndGetUsername(String token);
+    User verifyAndGetUser(String token);
 }

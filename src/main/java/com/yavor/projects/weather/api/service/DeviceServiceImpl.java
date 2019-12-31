@@ -9,6 +9,7 @@ import com.yavor.projects.weather.api.repository.DeviceRepository;
 import com.yavor.projects.weather.api.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +20,20 @@ public class DeviceServiceImpl implements DeviceService {
 
     private DeviceRepository deviceRepository;
     private ScheduleRepository scheduleRepository;
+    private MqttService mqttService;
 
 
-    public DeviceServiceImpl(DeviceRepository deviceRepository, ScheduleRepository scheduleRepository) {
+    public DeviceServiceImpl(DeviceRepository deviceRepository,
+                             ScheduleRepository scheduleRepository,
+                             MqttService mqttService) {
         this.deviceRepository = deviceRepository;
         this.scheduleRepository = scheduleRepository;
+        this.mqttService = mqttService;
+    }
+
+    @PostConstruct
+    public void initializeSubscribtions() {
+        deviceRepository.findAll().forEach(device -> mqttService.subscribe(device.getDeviceId()));
     }
 
     @Override
@@ -46,8 +56,12 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void switchDevice(String deviceId, DeviceStatus status) {
-        var device = findDeviceEntityById(deviceId);
-        device.setStatus(status.getLampStatus());
+        var receivedStatus = mqttService.publishLampControl(deviceId, status);
+        if (receivedStatus == null) {
+            throw new IllegalArgumentException("Unknown status received");
+        }
+        var device = findDeviceEntityById(receivedStatus.getDeviceId());
+        device.setStatus(receivedStatus.getLampStatus());
         device.setLastStatusChange(new Date());
         deviceRepository.save(device);
     }

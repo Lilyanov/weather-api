@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     "password" VARCHAR(50) NOT NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
+    role VARCHAR(100),
 
     PRIMARY KEY(username)
 );

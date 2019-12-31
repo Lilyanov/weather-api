@@ -4,6 +4,7 @@ import com.yavor.projects.weather.api.service.AuthorizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -14,6 +15,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtTokenFilter extends GenericFilterBean {
@@ -35,9 +37,13 @@ public class JwtTokenFilter extends GenericFilterBean {
         String token = resolveToken((HttpServletRequest) req);
         if (!token.isEmpty()) {
             try {
-                String user = authorizationService.verifyAndGetUsername(token);
-                SecurityContextHolder.getContext()
-                        .setAuthentication(new UsernamePasswordAuthenticationToken(user, "", null));
+                var user = authorizationService.verifyAndGetUser(token);
+                var authorization = new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        user.getPassword(),
+                        List.of(new SimpleGrantedAuthority(user.getRole()))
+                );
+                SecurityContextHolder.getContext().setAuthentication(authorization);
             } catch (Exception e) {
                 Logger.error(String.format("Exception: %s %s", e.getMessage(), e.getLocalizedMessage()));
             }

@@ -71,7 +71,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public String verifyAndGetUsername(final String token) {
-        return jwtVerifier.verify(token).getClaim("username").asString();
+    public User verifyAndGetUser(final String token) {
+        var username = jwtVerifier.verify(token).getClaim("username").asString();
+        var optional = userRepository.findById(username);
+        if (optional.isEmpty()) {
+            throw new IllegalArgumentException("User with this username doesn't exist");
+        }
+        return optional.get();
     }
 }
