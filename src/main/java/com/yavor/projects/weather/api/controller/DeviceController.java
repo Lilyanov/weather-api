@@ -4,7 +4,6 @@ import com.yavor.projects.weather.api.dto.DeviceDto;
 import com.yavor.projects.weather.api.dto.DeviceStatus;
 import com.yavor.projects.weather.api.dto.ScheduleDto;
 import com.yavor.projects.weather.api.service.DeviceService;
-import com.yavor.projects.weather.api.service.MqttService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +19,9 @@ import java.util.List;
 @RequestMapping("/devices")
 public class DeviceController {
 
-    private MqttService mqttService;
     private DeviceService deviceService;
 
-    public DeviceController(MqttService mqttService, DeviceService deviceService) {
-        this.mqttService = mqttService;
+    public DeviceController(DeviceService deviceService) {
         this.deviceService = deviceService;
     }
 
@@ -42,7 +39,7 @@ public class DeviceController {
 
     @PostMapping("{deviceId}/switch")
     public ResponseEntity<DeviceStatus> switchControl(@PathVariable("deviceId") String deviceId, @RequestBody DeviceStatus status) {
-        mqttService.publishLampControl(deviceId, status);
+        deviceService.switchDevice(deviceId, status);
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 

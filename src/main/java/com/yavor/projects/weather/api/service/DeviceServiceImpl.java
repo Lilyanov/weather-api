@@ -9,7 +9,6 @@ import com.yavor.projects.weather.api.repository.DeviceRepository;
 import com.yavor.projects.weather.api.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +28,6 @@ public class DeviceServiceImpl implements DeviceService {
         this.deviceRepository = deviceRepository;
         this.scheduleRepository = scheduleRepository;
         this.mqttService = mqttService;
-    }
-
-    @PostConstruct
-    public void initializeSubscribtions() {
-        deviceRepository.findAll().forEach(device -> mqttService.subscribe(device.getDeviceId()));
     }
 
     @Override
@@ -56,7 +50,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void switchDevice(String deviceId, DeviceStatus status) {
-        var receivedStatus = mqttService.publishLampControl(deviceId, status);
+        status.setDeviceId(deviceId);
+        var receivedStatus = mqttService.publishLampControl(status);
         if (receivedStatus == null) {
             throw new IllegalArgumentException("Unknown status received");
         }

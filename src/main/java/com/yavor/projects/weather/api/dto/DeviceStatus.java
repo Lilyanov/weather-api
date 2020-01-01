@@ -1,6 +1,5 @@
 package com.yavor.projects.weather.api.dto;
 
-import javax.persistence.Transient;
 import java.util.Date;
 
 public class DeviceStatus {
@@ -9,7 +8,6 @@ public class DeviceStatus {
 
     private Date scheduledDate;
 
-    @Transient
     private String deviceId;
 
 
