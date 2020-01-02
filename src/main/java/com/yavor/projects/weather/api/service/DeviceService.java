@@ -14,5 +14,5 @@ public interface DeviceService {
 
     void switchDevice(String deviceId, DeviceStatus status);
 
-    ScheduleDto scheduleDeviceSwitch(String deviceId, DeviceStatus status);
+    List<ScheduleDto> scheduleDeviceSwitch(String deviceId, List<ScheduleDto> schedules);
 }

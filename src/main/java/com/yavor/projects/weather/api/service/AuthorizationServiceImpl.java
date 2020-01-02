@@ -48,7 +48,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new UnauthorizedExcpetion("Username and password are required !");
         }
-        Optional<User> optionalUser = userRepository.findById(user.getUsername());
+        Optional<User> optionalUser = userRepository.findById(user.getUsername().toLowerCase());
         if (optionalUser.isEmpty()) {
             throw new UnauthorizedExcpetion(String.format("User with username %s doesn't exist !", user.getUsername()));
         }

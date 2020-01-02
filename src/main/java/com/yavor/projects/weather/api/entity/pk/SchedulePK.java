@@ -10,6 +10,8 @@ public class SchedulePK implements Serializable {
 
     private String deviceId;
 
+    private String type;
+
     public SchedulePK() {
 
     }
@@ -30,17 +32,26 @@ public class SchedulePK implements Serializable {
         this.deviceId = deviceId;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SchedulePK that = (SchedulePK) o;
         return Objects.equals(scheduledFor, that.scheduledFor) &&
-                Objects.equals(deviceId, that.deviceId);
+                Objects.equals(deviceId, that.deviceId) &&
+                Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(scheduledFor, deviceId);
+        return Objects.hash(scheduledFor, deviceId, type);
     }
 }

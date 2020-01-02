@@ -7,8 +7,13 @@ import com.yavor.projects.weather.api.entity.Device;
 import com.yavor.projects.weather.api.entity.Schedule;
 import com.yavor.projects.weather.api.repository.DeviceRepository;
 import com.yavor.projects.weather.api.repository.ScheduleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +21,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeviceServiceImpl.class);
+
 
     private DeviceRepository deviceRepository;
     private ScheduleRepository scheduleRepository;
@@ -50,6 +58,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void switchDevice(String deviceId, DeviceStatus status) {
+        LOGGER.info("Switching device {} to status: {}", deviceId, status.getLampStatus());
         status.setDeviceId(deviceId);
         var receivedStatus = mqttService.publishLampControl(status);
         if (receivedStatus == null) {
@@ -62,20 +71,78 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public ScheduleDto scheduleDeviceSwitch(String deviceId, DeviceStatus status) {
-        if (status.getScheduledDate() == null) {
-            throw new IllegalArgumentException("Scheduled date is required!");
+    public List<ScheduleDto> scheduleDeviceSwitch(String deviceId, List<ScheduleDto> schedules) {
+        var device = findDeviceEntityById(deviceId);
+        // remove existing entities
+        final List<Schedule> removed = new ArrayList<>();
+        for (var schedule: device.getSchedules()) {
+            if (schedules.stream().noneMatch(s -> s.getId() == schedule.getId())) {
+                removed.add(schedule);
+            }
         }
-        Device device = findDeviceEntityById(deviceId);
-        Schedule schedule = new Schedule();
-        schedule.setDesiredStatus(status.getLampStatus());
-        schedule.setDevice(device);
-        schedule.setDeviceId(deviceId);
-        schedule.setScheduledFor(status.getScheduledDate());
-        schedule.setCreatedAt(new Date());
-        schedule.setState("TODO");
-        schedule = scheduleRepository.save(schedule);
-        return new ScheduleDto(schedule);
+        device.getSchedules().removeAll(removed);
+        final List<ScheduleDto> persistedSchedules = new ArrayList<>();
+
+        for (ScheduleDto schedule : schedules) {
+            if (schedule.getScheduledFor() == null) {
+                throw new IllegalArgumentException("Scheduled for is required!");
+            }
+            Schedule scheduleEntity = new Schedule();
+            scheduleEntity.setId(schedule.getId());
+            scheduleEntity.setDesiredStatus(schedule.getDesiredStatus());
+            scheduleEntity.setDevice(device);
+            scheduleEntity.setScheduledFor(schedule.getScheduledFor());
+            scheduleEntity.setCreatedAt(new Date());
+            scheduleEntity.setType(schedule.getType());
+            scheduleEntity = scheduleRepository.save(scheduleEntity);
+            persistedSchedules.add(new ScheduleDto(scheduleEntity));
+        }
+        return persistedSchedules;
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void processScheduledSwitches() {
+        LOGGER.info("start processing schedules");
+        var cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        var now = cal.getTime();
+        var nonRepeatedSchedules = scheduleRepository.findSchedulesByType("NON_REPEATED");
+        for (var schedule : nonRepeatedSchedules) {
+            if (schedule.getScheduledFor().before(now)) {
+                schedule.setType("DISABLED");
+                scheduleRepository.save(schedule);
+                continue;
+            }
+            if (schedule.getScheduledFor().after(now)) {
+                continue;
+            }
+            try {
+                switchDevice(schedule.getDevice().getDeviceId(), new DeviceStatus(schedule.getDesiredStatus()));
+                schedule.setType("DISABLED");
+                schedule.setCreatedAt(now);
+                scheduleRepository.save(schedule);
+            } catch (Exception e) {
+                LOGGER.error("Couldn't switch successfully device {} to {}, because of the following reason: {}",
+                        schedule.getDevice().getDeviceId(), schedule.getDesiredStatus(), e.getMessage());
+            }
+        }
+
+        var repeatedSchedules = scheduleRepository.findSchedulesByType("REPEATED");
+        var currentHour = cal.get(Calendar.HOUR_OF_DAY);
+        var currentMinute = cal.get(Calendar.MINUTE);
+        for (Schedule schedule : repeatedSchedules) {
+            cal.setTime(schedule.getScheduledFor());
+            if (cal.get(Calendar.HOUR_OF_DAY) == currentHour && cal.get(Calendar.MINUTE) == currentMinute) {
+                try {
+                    switchDevice(schedule.getDevice().getDeviceId(), new DeviceStatus(schedule.getDesiredStatus()));
+                } catch (Exception e) {
+                    LOGGER.error("Couldn't switch successfully device {} to {}, because of the following reason: {}",
+                            schedule.getDevice().getDeviceId(), schedule.getDesiredStatus(), e.getMessage());
+                }
+            }
+        }
     }
 
     private Device findDeviceEntityById(String deviceId) {

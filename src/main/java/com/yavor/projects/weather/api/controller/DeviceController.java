@@ -44,8 +44,8 @@ public class DeviceController {
     }
 
     @PostMapping("{deviceId}/schedule")
-    public ResponseEntity<ScheduleDto> scheduleSwitchControl(@PathVariable("deviceId") String deviceId, @RequestBody DeviceStatus status) {
-        var schedule = deviceService.scheduleDeviceSwitch(deviceId, status);
-        return new ResponseEntity<>(schedule, HttpStatus.OK);
+    public ResponseEntity<List<ScheduleDto>> scheduleSwitchControl(@PathVariable("deviceId") String deviceId, @RequestBody List<ScheduleDto> schedules) {
+        var persistedSchedules = deviceService.scheduleDeviceSwitch(deviceId, schedules);
+        return new ResponseEntity<>(persistedSchedules, HttpStatus.OK);
     }
 }

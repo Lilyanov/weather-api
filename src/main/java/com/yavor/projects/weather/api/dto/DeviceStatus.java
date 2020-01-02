@@ -11,6 +11,10 @@ public class DeviceStatus {
     private String deviceId;
 
 
+    public DeviceStatus(short lampStatus) {
+        this.lampStatus = lampStatus;
+    }
+
     public DeviceStatus() {
 
     }

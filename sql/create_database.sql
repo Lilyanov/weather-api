@@ -26,13 +26,18 @@ CREATE TABLE IF NOT EXISTS devices (
     PRIMARY KEY(device_id)
 );
 
+CREATE SEQUENCE schedules_seq
+INCREMENT 1
+MINVALUE 50
+START 50;
+
 CREATE TABLE IF NOT EXISTS schedules (
+    id BIGINT PRIMARY KEY,
     device_fk VARCHAR(50) NOT NULL,
     scheduled_for TIMESTAMP WITH TIME ZONE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
-    state VARCHAR(50),
+    type VARCHAR(100),
     desired_status smallint,
 
-    PRIMARY KEY(device_fk, scheduled_for),
     FOREIGN KEY(device_fk) REFERENCES devices(device_id)
 );

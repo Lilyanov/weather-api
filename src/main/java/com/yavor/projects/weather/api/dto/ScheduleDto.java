@@ -15,7 +15,9 @@ public class ScheduleDto implements Serializable {
 
     private Date createdAt;
 
-    private String state;
+    private String type;
+
+    private long id;
 
 
     public ScheduleDto() {
@@ -23,10 +25,11 @@ public class ScheduleDto implements Serializable {
     }
 
     public ScheduleDto(Schedule schedule) {
+        this.id = schedule.getId();
         this.scheduledFor = schedule.getScheduledFor();
         this.desiredStatus = schedule.getDesiredStatus();
         this.createdAt = schedule.getCreatedAt();
-        this.state = schedule.getState();
+        this.type = schedule.getType();
     }
 
     public Date getScheduledFor() {
@@ -53,11 +56,19 @@ public class ScheduleDto implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public String getState() {
-        return state;
+    public String getType() {
+        return type;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

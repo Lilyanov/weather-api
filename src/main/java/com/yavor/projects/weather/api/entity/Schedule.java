@@ -1,15 +1,15 @@
 package com.yavor.projects.weather.api.entity;
 
-import com.yavor.projects.weather.api.entity.pk.SchedulePK;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,18 +19,20 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "schedules")
-@IdClass(SchedulePK.class)
 @XmlRootElement
 public class Schedule {
 
     @Id
-    @Column(name = "device_fk")
-    private String deviceId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedules_gen")
+    @SequenceGenerator(name="schedules_gen", sequenceName = "schedules_seq", allocationSize = 50)
+    private long id;
 
-    @Id
     @Column(name = "scheduled_for")
     @Temporal(TemporalType.TIMESTAMP)
     private Date scheduledFor;
+
+    @Column(name = "type")
+    private String type;
 
     @Column(name = "desired_status")
     private Short desiredStatus;
@@ -39,25 +41,13 @@ public class Schedule {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column
-    private String state;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "device_fk")
-    @MapsId(value = "device_fk")
     private Device device;
 
 
     public Schedule() {
 
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
     }
 
     public Date getCreatedAt() {
@@ -66,14 +56,6 @@ public class Schedule {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public Date getScheduledFor() {
@@ -100,17 +82,32 @@ public class Schedule {
         this.device = device;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Schedule schedule = (Schedule) o;
-        return Objects.equals(deviceId, schedule.deviceId) &&
-                Objects.equals(scheduledFor, schedule.scheduledFor);
+        var schedule = (Schedule) o;
+        return id == schedule.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deviceId, scheduledFor);
+        return Objects.hash(id);
     }
 }
