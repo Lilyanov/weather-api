@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class MqttServiceImpl implements MqttService {
+    public static AtomicBoolean CONNECTION_INTERRUPTED = new AtomicBoolean(false);
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MqttServiceImpl.class);
     private static final String PUBLISH_LAMP_CONTROL_TOPIC = "devices/in";
     private static final String RECEIVE_LAMP_STATUS_TOPIC = "devices/out";
@@ -38,24 +41,43 @@ public class MqttServiceImpl implements MqttService {
 
     @Override
     public DeviceStatus publishLampControl(DeviceStatus status) {
-        try {
-            var statusStr = mapper.writeValueAsString(status);
-            LOGGER.info("Sending status: {} to device: {}", statusStr);
-            publish(PUBLISH_LAMP_CONTROL_TOPIC, statusStr);
-            return receivedStatuses.poll(10, TimeUnit.SECONDS);
-        } catch (JsonProcessingException | InterruptedException e) {
-            LOGGER.error("Sending status: {} to device: {} failed. Reason: {}",status, e.getMessage());
+        byte retries = 0;
+        while (retries < 3) {
+            try {
+                var statusStr = mapper.writeValueAsString(status);
+                LOGGER.info("Sending status: {} to device: {}", statusStr);
+                publish(PUBLISH_LAMP_CONTROL_TOPIC, statusStr);
+                return receivedStatuses.poll(10, TimeUnit.SECONDS);
+            } catch (JsonProcessingException | InterruptedException e) {
+                LOGGER.error("Sending status: {} to device: {} failed. Reason: {}", status, e.getMessage());
+                retries++;
+            }
         }
         return null;
     }
 
     private void publish(final String topic, final String payload) {
+        if (CONNECTION_INTERRUPTED.get()) {
+            LOGGER.warn("Reinitializing the subscriptions after connection interrupted!");
+            this.subscribe();
+            CONNECTION_INTERRUPTED.set(false);
+        }
         try {
             var mqttMessage = new MqttMessage();
             mqttMessage.setPayload(payload.getBytes());
             mqttClient.publish(topic, mqttMessage);
         } catch (MqttException e) {
             e.printStackTrace();
+            LOGGER.error("Couldn't publish message: {}", e.getMessage());
+            LOGGER.info("Is connected: {}", mqttClient.isConnected());
+            try {
+                if (mqttClient.isConnected()) {
+                    mqttClient.disconnect();
+                    mqttClient.connect();
+                }
+            } catch (MqttException e1) {
+                LOGGER.error("Couldn't reconnect: {}", e1.getMessage());
+            }
         }
     }
 

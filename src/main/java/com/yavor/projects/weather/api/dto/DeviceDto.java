@@ -24,6 +24,7 @@ public class DeviceDto implements Serializable {
     }
 
     public DeviceDto(Device device) {
+        this();
         this.deviceId = device.getDeviceId();
         this.status = device.getStatus();
         this.lastStatusChange = device.getLastStatusChange();

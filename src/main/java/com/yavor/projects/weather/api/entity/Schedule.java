@@ -1,5 +1,7 @@
 package com.yavor.projects.weather.api.entity;
 
+import com.yavor.projects.weather.api.dto.ScheduleDto;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -109,5 +111,12 @@ public class Schedule {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean equalToDto(ScheduleDto dto) {
+        return this.id == dto.getId()
+                && dto.getType().equals(this.type)
+                && dto.getDesiredStatus().equals(this.desiredStatus)
+                && dto.getScheduledFor().equals(this.scheduledFor);
     }
 }

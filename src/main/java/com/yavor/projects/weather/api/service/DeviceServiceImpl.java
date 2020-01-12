@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -28,14 +27,17 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceRepository deviceRepository;
     private ScheduleRepository scheduleRepository;
     private MqttService mqttService;
+    private RealTimeService realTimeService;
 
 
     public DeviceServiceImpl(DeviceRepository deviceRepository,
                              ScheduleRepository scheduleRepository,
-                             MqttService mqttService) {
+                             MqttService mqttService,
+                             RealTimeService realTimeService) {
         this.deviceRepository = deviceRepository;
         this.scheduleRepository = scheduleRepository;
         this.mqttService = mqttService;
+        this.realTimeService = realTimeService;
     }
 
     @Override
@@ -68,36 +70,48 @@ public class DeviceServiceImpl implements DeviceService {
         device.setStatus(receivedStatus.getLampStatus());
         device.setLastStatusChange(new Date());
         deviceRepository.save(device);
+
+        sendDeviceRealTime(device);
     }
 
     @Override
     public List<ScheduleDto> scheduleDeviceSwitch(String deviceId, List<ScheduleDto> schedules) {
         var device = findDeviceEntityById(deviceId);
+        var existingSchedules = device.getSchedules();
         // remove existing entities
-        final List<Schedule> removed = new ArrayList<>();
-        for (var schedule: device.getSchedules()) {
-            if (schedules.stream().noneMatch(s -> s.getId() == schedule.getId())) {
-                removed.add(schedule);
-            }
-        }
-        device.getSchedules().removeAll(removed);
-        final List<ScheduleDto> persistedSchedules = new ArrayList<>();
+        var removed = existingSchedules.stream()
+                .filter(schedule -> schedules.stream().noneMatch(s -> s.getId() == schedule.getId()))
+                .collect(Collectors.toList());
+        removed.forEach(schedule -> {
+            existingSchedules.remove(schedule);
+            scheduleRepository.delete(schedule);
+        });
+        scheduleRepository.flush();
 
-        for (ScheduleDto schedule : schedules) {
-            if (schedule.getScheduledFor() == null) {
-                throw new IllegalArgumentException("Scheduled for is required!");
-            }
-            Schedule scheduleEntity = new Schedule();
-            scheduleEntity.setId(schedule.getId());
-            scheduleEntity.setDesiredStatus(schedule.getDesiredStatus());
-            scheduleEntity.setDevice(device);
-            scheduleEntity.setScheduledFor(schedule.getScheduledFor());
-            scheduleEntity.setCreatedAt(new Date());
-            scheduleEntity.setType(schedule.getType());
-            scheduleEntity = scheduleRepository.save(scheduleEntity);
-            persistedSchedules.add(new ScheduleDto(scheduleEntity));
-        }
-        return persistedSchedules;
+        schedules.stream()
+                .filter(newSchedule -> existingSchedules.stream().noneMatch(s -> s.equalToDto(newSchedule)))
+                .forEach(schedule -> {
+                    if (schedule.getScheduledFor() == null) {
+                        throw new IllegalArgumentException("Scheduled for is required!");
+                    }
+                    schedule.setCreatedAt(new Date());
+
+                    var scheduleEntity = new Schedule();
+                    scheduleEntity.setId(schedule.getId());
+                    scheduleEntity.setDesiredStatus(schedule.getDesiredStatus());
+                    scheduleEntity.setDevice(device);
+                    scheduleEntity.setScheduledFor(schedule.getScheduledFor());
+                    scheduleEntity.setCreatedAt(schedule.getCreatedAt());
+                    scheduleEntity.setType(schedule.getType());
+                    scheduleRepository.save(scheduleEntity);
+                });
+
+
+        var dto = new DeviceDto(device);
+        dto.setSchedules(schedules);
+        realTimeService.sendDevice(dto);
+
+        return schedules;
     }
 
     @Scheduled(cron = "0 * * * * *")
@@ -143,6 +157,15 @@ public class DeviceServiceImpl implements DeviceService {
                 }
             }
         }
+    }
+
+    private void sendDeviceRealTime(Device device) {
+        var deviceDto = new DeviceDto(device);
+        for (var schedule : device.getSchedules()) {
+            deviceDto.getSchedules().add(new ScheduleDto(schedule));
+        }
+        realTimeService.sendDevice(deviceDto);
+
     }
 
     private Device findDeviceEntityById(String deviceId) {
