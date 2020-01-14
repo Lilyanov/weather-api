@@ -46,7 +46,7 @@ public class MqttConfig {
             });
             return mqttClient;
         } catch (MqttException e) {
-            System.err.println("couldn't create client");
+            LOGGER.error("Couldn't create client. Reason: {}", e.getMessage());
             e.printStackTrace();
         }
         return null;

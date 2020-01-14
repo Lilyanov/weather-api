@@ -5,7 +5,7 @@ import com.yavor.projects.weather.api.security.UnauthorizedExcpetion;
 
 public interface AuthorizationService {
 
-    User generateJWT(User user) throws UnauthorizedExcpetion;
+    User generateJWT(String ip, User user) throws UnauthorizedExcpetion;
 
     User verifyAndGetUser(String token);
 }

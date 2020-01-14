@@ -35,6 +35,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket'
     compile group: 'org.springframework.integration', name: 'spring-integration-mqtt', version: '5.2.2.RELEASE'
+    compile group: 'com.google.guava', name: 'guava', version: '28.1-jre'
 
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
     compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'

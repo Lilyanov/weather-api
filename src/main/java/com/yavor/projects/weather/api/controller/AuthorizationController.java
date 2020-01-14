@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthorizationController {
@@ -24,8 +26,8 @@ public class AuthorizationController {
     }
 
     @PostMapping(value = "/get-token")
-    public ResponseEntity<User> generateJWT(@RequestBody User user) throws UnauthorizedExcpetion {
-        var existingUser = authorizationService.generateJWT(user);
+    public ResponseEntity<User> generateJWT(@RequestBody User user, HttpServletRequest request) throws UnauthorizedExcpetion {
+        var existingUser = authorizationService.generateJWT(request.getRemoteAddr(), user);
         return new ResponseEntity<>(existingUser, HttpStatus.OK);
     }
 
