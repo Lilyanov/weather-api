@@ -64,9 +64,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (ip == null || ip.isEmpty()) {
             throw new UnauthorizedExcpetion("Request couldn't be processed");
         }
-        if (isBlocked(ip)) {
-            throw new UnauthorizedExcpetion("User is blocked due to too much incorrect attempts. Please try again later!");
-        }
         if (user.getUsername() == null || user.getUsername().isEmpty()
                 || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new UnauthorizedExcpetion("Username and password are required !");
@@ -75,12 +72,15 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (optionalUser.isEmpty()) {
             throw new UnauthorizedExcpetion(String.format("User with username %s doesn't exist !", user.getUsername()));
         }
+        if (isBlocked(ip + user.getUsername())) {
+            throw new UnauthorizedExcpetion("User is blocked due to too much incorrect attempts. Please try again later!");
+        }
         var existingUser = optionalUser.get();
         if (!existingUser.getPassword().equals(user.getPassword())) {
-            loginFailed(ip);
+            loginFailed(ip + user.getUsername());
             throw new UnauthorizedExcpetion("Incorrect username or password !");
         }
-        loginSucceeded(ip);
+        loginSucceeded(ip + user.getUsername());
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.HOUR_OF_DAY, 12);

@@ -17,8 +17,10 @@ public class TimeseriesServiceImpl implements TimeseriesService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeseriesServiceImpl.class);
 
     private final TimeseriesRepository timeseriesRepository;
+    private final RealTimeService realTimeService;
 
-    public TimeseriesServiceImpl(TimeseriesRepository timeseriesRepository) {
+    public TimeseriesServiceImpl(TimeseriesRepository timeseriesRepository, RealTimeService realTimeService) {
+        this.realTimeService = realTimeService;
         this.timeseriesRepository = timeseriesRepository;
     }
 
@@ -53,4 +55,16 @@ public class TimeseriesServiceImpl implements TimeseriesService {
         return timeSeriesList;
     }
 
+    @Override
+    public void sendTimeseries(List<Timeseries> timeseriesList) {
+
+        var tsGroups = timeseriesList.stream().map(ts -> {
+            var tsGroup = new TimeseriesGroup();
+            tsGroup.setTimeseries(List.of(ts));
+            tsGroup.setType(ts.getType());
+            return tsGroup;
+        }).collect(Collectors.toList());
+
+        this.realTimeService.sendTimeseries(tsGroups);
+    }
 }

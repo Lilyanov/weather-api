@@ -1,8 +1,10 @@
 package com.yavor.projects.weather.api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yavor.projects.weather.api.dto.DeviceStatus;
+import com.yavor.projects.weather.api.entity.Timeseries;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,16 +23,19 @@ public class MqttServiceImpl implements MqttService {
     public static AtomicBoolean CONNECTION_INTERRUPTED = new AtomicBoolean(false);
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MqttServiceImpl.class);
+    private static final String MEASUREMENTS_TOPIC = "measurements/out";
     private static final String PUBLISH_LAMP_CONTROL_TOPIC = "devices/in";
     private static final String RECEIVE_LAMP_STATUS_TOPIC = "devices/out";
 
-    private IMqttClient mqttClient;
-    private ObjectMapper mapper;
+    private final IMqttClient mqttClient;
+    private final TimeseriesService timeseriesService;
+    private final ObjectMapper mapper;
 
     private LinkedBlockingQueue<DeviceStatus> receivedStatuses;
 
-    public MqttServiceImpl(IMqttClient mqttClient) {
+    public MqttServiceImpl(IMqttClient mqttClient, TimeseriesService timeseriesService) {
         this.mqttClient = mqttClient;
+        this.timeseriesService = timeseriesService;
         this.receivedStatuses = new LinkedBlockingQueue<>();
         this.mapper = new ObjectMapper();
     }
@@ -82,15 +88,24 @@ public class MqttServiceImpl implements MqttService {
     }
 
     private void subscribe() {
-        LOGGER.info("Subscribe to topic: {}", RECEIVE_LAMP_STATUS_TOPIC);
         try {
+            LOGGER.info("Subscribe to topic: {}", RECEIVE_LAMP_STATUS_TOPIC);
             mqttClient.subscribeWithResponse(RECEIVE_LAMP_STATUS_TOPIC, (topic, msg) -> {
                 LOGGER.info("Receive message on topic: {}", topic);
                 LOGGER.info("Message: {}", new String(msg.getPayload()));
                 var status = mapper.readValue(msg.getPayload(), DeviceStatus.class);
                 receivedStatuses.add(status);
             });
+
+            LOGGER.info("Subscribe to topic: {}", MEASUREMENTS_TOPIC);
+            mqttClient.subscribeWithResponse(MEASUREMENTS_TOPIC, (topic, msg) -> {
+                LOGGER.info("Receive message on topic: {}", topic);
+                LOGGER.info("Message: {}", new String(msg.getPayload()));
+                final List<Timeseries> timeSeries = mapper.readValue(msg.getPayload(), new TypeReference<List<Timeseries>>(){});
+                timeseriesService.sendTimeseries(timeSeries);
+            });
         } catch (MqttException e) {
+            LOGGER.error("Couldn't subscribe to topics: {}", e.getMessage());
             e.printStackTrace();
         }
     }

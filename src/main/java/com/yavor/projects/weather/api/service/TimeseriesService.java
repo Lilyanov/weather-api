@@ -13,4 +13,6 @@ public interface TimeseriesService {
     List<Timeseries> findTimeseriesByTypeForPeriod(String type, Date from, Date to);
 
     List<Timeseries> save(List<Timeseries> timeSeriesList);
+
+    void sendTimeseries(List<Timeseries> timeseriesList);
 }
