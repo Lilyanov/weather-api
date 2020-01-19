@@ -38,6 +38,13 @@ public class Timeseries implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date insertionTime;
 
+    public Timeseries(Timeseries other) {
+        this.value = other.value;
+        this.valueTime = other.valueTime;
+        this.device = other.device;
+        this.type = other.type;
+        this.insertionTime = other.insertionTime;
+    }
 
     public Timeseries() {
 

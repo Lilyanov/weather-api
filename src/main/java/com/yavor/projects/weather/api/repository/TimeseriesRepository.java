@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface TimeseriesRepository extends JpaRepository<Timeseries, Long> {
 
-    @Query("SELECT t FROM Timeseries t WHERE t.type = ?1 AND t.valueTime >= ?2 AND t.valueTime < ?3 ORDER BY t.valueTime ASC")
+    @Query("SELECT t FROM Timeseries t WHERE t.type = ?1 AND t.valueTime >= ?2 AND date_trunc('minute', t.valueTime) <= ?3 ORDER BY t.valueTime ASC")
     List<Timeseries> findTimeseriesByTypeForPeriod(String type, Date from, Date to);
 
 }
