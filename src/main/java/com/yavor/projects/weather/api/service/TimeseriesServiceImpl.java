@@ -44,17 +44,16 @@ public class TimeseriesServiceImpl implements TimeseriesService {
     @Override
     public List<Timeseries> findTimeseriesByTypeForPeriod(String type, Date from, Date to) {
 
-        var timeseries = timeseriesRepository.findTimeseriesByTypeForPeriod(type, from, to);
         var diffInMillies = Math.abs(to.getTime() - from.getTime());
         var diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        if (diff <= 2) {
-            return timeseries;
-        } else if (diff <= 7) {
-            return aggregateTimeseries(timeseries, 1);
-        } else if (diff <= 30) {
-            return aggregateTimeseries(timeseries, 6);
+        if (diff <= 7) {
+            return timeseriesRepository.findTimeseriesByTypeForPeriod(type, from, to);
+        } else if (diff <= 60) {
+            return timeseriesRepository.groupTimeseriesByHourForPeriod(type, from, to)
+                    .stream().map(TimeseriesServiceImpl::parseTimeSeriesGroupedRecords).collect(Collectors.toList());
         } else {
-            return aggregateTimeseries(timeseries, 24);
+            return timeseriesRepository.groupTimeseriesByDayForPeriod(type, from, to)
+                    .stream().map(TimeseriesServiceImpl::parseTimeSeriesGroupedRecords).collect(Collectors.toList());
         }
     }
 
@@ -84,49 +83,17 @@ public class TimeseriesServiceImpl implements TimeseriesService {
         this.realTimeService.sendTimeseries(tsGroups);
     }
 
-    private List<Timeseries> aggregateTimeseries(List<Timeseries> timeseriesList, int targetAggregatedHour) {
-        if (timeseriesList.isEmpty()) {
-            return timeseriesList;
-        }
+    private static Timeseries parseTimeSeriesGroupedRecords(Object[] record) {
+        var t = new Timeseries();
+        t.setDevice((String) record[0]);
+        t.setType((String) record[1]);
+        t.setValueTime((Date) record[2]);
+        t.setValue(round((double) record[3], 3));
+        return t;
+    }
 
-        final List<Timeseries> aggregated = new ArrayList<>();
-
-        double aggregatedValue = 0;
-        short count = 0;
-        byte newHours = 0;
-        Date previousValueTime = timeseriesList.get(0).getValueTime();
-        Date previousAggregatedTime = timeseriesList.get(0).getValueTime();
-
-        for (int i = 0; i < timeseriesList.size(); i++) {
-            var timeseries = timeseriesList.get(i);
-
-            cal.setTime(timeseries.getValueTime());
-            var hour = cal.get(Calendar.HOUR_OF_DAY);
-            cal.setTime(previousValueTime);
-            var previousHour = cal.get(Calendar.HOUR_OF_DAY);
-
-            if (hour != previousHour) {
-                newHours++;
-            }
-
-            if (newHours == targetAggregatedHour || i == timeseriesList.size() - 1) {
-                var agg = new Timeseries(timeseries);
-                cal.setTime(previousValueTime);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                agg.setValueTime(previousAggregatedTime);
-                agg.setValue(Math.ceil(aggregatedValue / count));
-                aggregated.add(agg);
-                count = 0;
-                aggregatedValue = 0;
-                newHours = 0;
-                previousAggregatedTime = timeseries.getValueTime();
-            }
-
-            count++;
-            aggregatedValue += timeseries.getValue();
-            previousValueTime = timeseries.getValueTime();
-        }
-        return aggregated;
+    private static double round(double floatingNumber, int digit) {
+        var scale = Math.pow(10, digit);
+        return Math.round(floatingNumber * scale) / scale;
     }
 }
