@@ -1,0 +1,257 @@
+<mxfile host="app.diagrams.net" modified="2021-08-11T09:46:38.702Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" etag="HLhRHTzgSUrwQ9tlrm_4" version="14.9.3" type="github">
+  <diagram id="DXXM4gPWSaD5NrukjxqS" name="Page-1">
+    <mxGraphModel dx="1038" dy="1647" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-22" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="110" y="80" width="10" height="490" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-23" value="Host Agent" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="55" y="-120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-29" value="" style="endArrow=classic;html=1;fillColor=#dae8fc;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="241" as="sourcePoint" />
+            <mxPoint x="580" y="241" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-39" value="Rest call" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="mQY5GGUvLTRxGFvoRRSD-29" vertex="1" connectable="0">
+          <mxGeometry x="-0.2836" y="1" relative="1" as="geometry">
+            <mxPoint x="31" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-31" value="Request vault secret ID using SSO token for authentication" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="170" y="210" width="360" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-32" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="580" y="40" width="10" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-33" value="Vault Orchestrator" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="532.5" y="-120" width="105" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-35" value="" style="endArrow=none;dashed=1;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;fillColor=#dae8fc;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-32" target="mQY5GGUvLTRxGFvoRRSD-33" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="60" as="sourcePoint" />
+            <mxPoint x="450" y="10" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-36" value="" style="endArrow=classic;html=1;entryX=0.929;entryY=0.729;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#dae8fc;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-22" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="437" as="sourcePoint" />
+            <mxPoint x="127.5" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-51" value="Rest response" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="mQY5GGUvLTRxGFvoRRSD-36" vertex="1" connectable="0">
+          <mxGeometry x="0.1911" relative="1" as="geometry">
+            <mxPoint x="21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-37" value="Provides wrapped secret ID (valid 250 seconds)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="202.5" y="410" width="285" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-38" value="SSO Portal" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="285" y="-120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-40" value="" style="endArrow=classic;html=1;fillColor=#dae8fc;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-41" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="119" y="102" as="sourcePoint" />
+            <mxPoint x="340" y="107" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-41" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="340" y="80" width="10" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-42" value="SSO authentication" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="180" y="80" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-43" value="" style="endArrow=classic;html=1;entryX=1.2;entryY=0.14;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#dae8fc;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-22" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="340" y="149" as="sourcePoint" />
+            <mxPoint x="120" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-44" value="Provides SSO token" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="180" y="120" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-46" value="" style="endArrow=none;dashed=1;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;fillColor=#dae8fc;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-41" target="mQY5GGUvLTRxGFvoRRSD-38" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="60" as="sourcePoint" />
+            <mxPoint x="345" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-47" value="" style="endArrow=none;dashed=1;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-22" target="mQY5GGUvLTRxGFvoRRSD-23" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="90" y="30" as="sourcePoint" />
+            <mxPoint x="140" y="-20" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-55" value="Service" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="745" y="-120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-56" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="800" y="530" width="10" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-57" value="" style="endArrow=classic;html=1;entryX=-0.16;entryY=0.083;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#dae8fc;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-56" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="122" y="562" as="sourcePoint" />
+            <mxPoint x="500" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-58" value="Start service" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="350" y="540" width="195" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-59" value="" style="endArrow=none;dashed=1;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-56" target="mQY5GGUvLTRxGFvoRRSD-55" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="790" y="50" as="sourcePoint" />
+            <mxPoint x="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-66" value="HashiCorp vault" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1160" y="-120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-70" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="1215" y="40" width="10" height="880" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-73" value="Authenticate to Vault using vanilla secret ID" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="895" y="680" width="250" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1015" y="620" as="sourcePoint" />
+            <mxPoint x="1015" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-81" value="&lt;span&gt;Read wrapped secret ID from the environment variable&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="920" y="540" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-85" value="&lt;span&gt;Unwrap secret ID to vanilla secret ID&lt;/span&gt;&lt;br&gt;&lt;span&gt;(valid forever)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="920" y="600" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-86" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-81" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="809" y="555" as="sourcePoint" />
+            <mxPoint x="920" y="548" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-90" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-85" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="810" y="615" as="sourcePoint" />
+            <mxPoint x="830" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-92" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="809" y="708" as="sourcePoint" />
+            <mxPoint x="1212" y="708" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-93" value="&lt;span&gt;Store received secret ID as environment variable:&lt;/span&gt;&lt;br&gt;&lt;span&gt;role-id=secret-id&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="260" y="480" width="270" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-95" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.929;exitY=0.848;exitDx=0;exitDy=0;fillColor=#dae8fc;exitPerimeter=0;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-22" target="mQY5GGUvLTRxGFvoRRSD-93" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="123" y="410" as="sourcePoint" />
+            <mxPoint x="480" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-100" value="" style="endArrow=classic;html=1;exitX=-0.2;exitY=0.8;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-70" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1210" y="740" as="sourcePoint" />
+            <mxPoint x="813" y="740" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-101" value="Receive vault instance" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="940" y="720" width="140" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-102" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="810" y="815" as="sourcePoint" />
+            <mxPoint x="1212" y="815" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-103" value="Request vault data by vault instance&amp;nbsp;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="900" y="790" width="210" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-104" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1216" y="850" as="sourcePoint" />
+            <mxPoint x="805" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-105" value="Provides vault data" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="950" y="830" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-106" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=3;jumpSize=15;endSize=5;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1013.5699999999999" y="910" as="sourcePoint" />
+            <mxPoint x="1013.5699999999999" y="870" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-107" value="" style="endArrow=none;dashed=1;html=1;endSize=5;strokeWidth=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-66" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1220" y="40" as="sourcePoint" />
+            <mxPoint x="1218" y="20" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-108" value="" style="endArrow=classic;html=1;endSize=5;strokeColor=#000000;strokeWidth=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-32" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="601" y="250" as="sourcePoint" />
+            <mxPoint x="1210" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-110" value="Log in Vault with CMC Role and Secret IDs" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="845" y="230" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-111" value="" style="endArrow=classic;html=1;endSize=5;strokeColor=#000000;strokeWidth=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1214" y="289.29" as="sourcePoint" />
+            <mxPoint x="590" y="289.29" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-112" value="Receive vault client token" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="845" y="270" width="150" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-113" value="" style="endArrow=classic;html=1;endSize=5;strokeColor=#000000;strokeWidth=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="590" y="360" as="sourcePoint" />
+            <mxPoint x="1210" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-116" value="" style="endArrow=classic;html=1;endSize=5;strokeColor=#000000;strokeWidth=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1215" y="400" as="sourcePoint" />
+            <mxPoint x="591" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-117" value="Request wrapped secret ID using client token" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="830" y="340" width="260" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-118" value="Provides vault wrapped secret ID (valid 250 seconds)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="830" y="380" width="300" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-120" value="" style="endArrow=classic;html=1;endSize=5;strokeColor=#000000;strokeWidth=1;exitX=1.014;exitY=0.045;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="mQY5GGUvLTRxGFvoRRSD-32" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="210" as="sourcePoint" />
+            <mxPoint x="1210" y="59" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-121" value="Manual login in Vault" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="885" y="30" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-122" value="" style="endArrow=classic;html=1;endSize=5;strokeColor=#000000;strokeWidth=1;entryX=1.243;entryY=0.165;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="mQY5GGUvLTRxGFvoRRSD-32" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1210" y="110" as="sourcePoint" />
+            <mxPoint x="730" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-123" value="Provides CMC Role ID and CMC Secret ID" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="845" y="80" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="mQY5GGUvLTRxGFvoRRSD-131" value="" style="swimlane;startSize=0;fillColor=#f8cecc;dashed=1;strokeColor=#b85450;strokeWidth=3;" parent="1" vertex="1">
+          <mxGeometry x="110" y="50" width="350" height="140" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
